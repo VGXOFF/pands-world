@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мир панд - Большие панды</title>
+    <style>
+        /* Сброс и базовые стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #4CAF50;
+            --primary-dark: #388E3C;
+            --secondary: #FF9800;
+            --light: #F5F5F5;
+            --dark: #212121;
+            --white: #FFFFFF;
+            --black: #000000;
+            --bamboo: #8BC34A;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* Навигационная панель */
+        .navbar {
+            background-color: var(--dark);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--white);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            font-size: 2.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-links a.active {
+            background-color: var(--primary);
+        }
+
+        .nav-links a.active:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        /* Основной контент */
+        .page {
+            display: none;
+            animation: fadeIn 0.5s ease;
+            min-height: calc(100vh - 80px);
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* Стили для главной страницы */
+        .hero {
+            text-align: center;
+            padding: 5rem 2rem;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            font-size: 1.1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            background-color: var(--primary-dark);
+        }
+
+        /* Галерея фотографий */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .photo-card {
+            background: var(--white);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .photo-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .photo-content {
+            padding: 1.5rem;
+        }
+
+        .photo-content h3 {
+            color: var(--primary-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Секции с информацией */
+        .info-section {
+            background: var(--white);
+            border-radius: 15px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .info-section h2 {
+            color: var(--primary-dark);
+            border-bottom: 3px solid var(--bamboo);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .fact-list {
+            list-style: none;
+            padding-left: 1rem;
+        }
+
+        .fact-list li {
+            padding: 0.5rem 0;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .fact-list li:before {
+            content: "🐼";
+            position: absolute;
+            left: 0;
+        }
+
+        /* Таблица характеристик */
+        .feature-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background: var(--white);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-table th {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 1rem;
+            text-align: left;
+        }
+
+        .feature-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .feature-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .feature-table tr:hover {
+            background-color: #f1f8e9;
+        }
+
+        /* Секция угроз */
+        .threats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .threat-card {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 5px solid #f44336;
+        }
+
+        .threat-card h4 {
+            color: #d32f2f;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Секция помощи */
+        .help-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--bamboo) 100%);
+            color: var(--white);
+            padding: 3rem;
+            border-radius: 15px;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        /* Слайдер фотографий */
+        .slider {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            overflow: hidden;
+            border-radius: 15px;
+            margin: 3rem 0;
+        }
+
+        .slide {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        .slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .slide-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .slider-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .slider-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Футер */
+        .footer {
+            background-color: var(--dark);
+            color: var(--white);
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .social-icon {
+            color: var(--white);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .social-icon:hover {
+            color: var(--primary);
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pandaFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .panda-float {
+            animation: pandaFloat 3s ease-in-out infinite;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background-color: var(--dark);
+                flex-direction: column;
+                padding: 1rem;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .slider {
+                height: 300px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Навигационная панель -->
+    <nav class="navbar">    
+        <div class="nav-container">
+            <a href="#" class="logo" onclick="showPage('home')">
+                <span class="logo-icon panda-float">🐼</span>
+                <span>Мир панд</span>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#" class="nav-link active" onclick="showPage('home')">Главная</a></li>
+                <li><a href="#" class="nav-link" onclick="showPage('about')">О пандах</a></li>
+                <li><a href="#" class="nav-link" onclick="showPage('gallery')">Фотогалерея</a></li>
+                <li><a href="#" class="nav-link" onclick="showPage('conservation')">Сохранение</a></li>
+                <li><a href="#" class="nav-link" onclick="showPage('facts')">Интересные факты</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Страницы -->
+    <main>
+        <!-- Главная страница -->
+        <section id="home" class="page active">
+            <div class="container">
+                <div class="hero">
+                    <h1>Большие панды</h1>
+                    <p>Удивительные черно-белые медведи, символ сохранения дикой природы и национальное сокровище Китая</p>
+                    <a href="#" class="btn" onclick="showPage('about')"><i class="fas fa-paw"></i> Узнать больше</a>
+                </div>
+                
+                <div class="gallery">
+                    <div class="photo-card">
+                        <img src="https://images.unsplash.com/photo-1525382455947-f319bc05fb35?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" 
+                             alt="Панда ест бамбук" class="photo-img">
+                        <div class="photo-content">
+                            <h3>Панда с бамбуком</h3>
+                            <p>Большие панды проводят до 14 часов в день за поеданием бамбука</p>
+                        </div>
+                    </div>
+                    
+                    <div class="photo-card">
+                        <img src="https://i.ytimg.com/vi/frmwD_nMD_c/maxresdefault.jpg" 
+                             alt="Детеныш панды" class="photo-img">
+                        <div class="photo-content">
+                            <h3>Детеныш панды</h3>
+                            <p>Новорожденные панды весят всего 100-200 грамм - в 900 раз меньше матери!</p>
+                        </div>
+                    </div>
+                    
+                    <div class="photo-card">
+                        <img src="https://as1.ftcdn.net/jpg/03/48/54/86/1000_F_348548611_7krP3lS5LY22sv9CBjtJehuFxnzgGzYD.jpg" 
+                             alt="Панда на дереве" class="photo-img">
+                        <div class="photo-content">
+                            <h3>Панда на дереве</h3>
+                            <p>Несмотря на крупные размеры, панды отлично лазают по деревьям</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- О пандах -->
+        <section id="about" class="page">
+            <div class="container">
+                <h1 style="color: var(--primary-dark); margin-bottom: 2rem;">Большие панды: удивительные существа</h1>
+                
+                <div class="info-section">
+                    <h2>Кто такие большие панды?</h2>
+                    <p>Большая панда (Ailuropoda melanoleuca) — млекопитающее из семейства медвежьих, обитающее в горных регионах центрального Китая. Несмотря на свою таксономическую классификацию как хищник, рацион панды на 99% состоит из бамбука.</p>
+                    
+                    <table class="feature-table">
+                        <thead>
+                            <tr>
+                                <th>Характеристика</th>
+                                <th>Значение</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Научное название</td>
+                                <td>Ailuropoda melanoleuca</td>
+                            </tr>
+                            <tr>
+                                <td>Вес взрослой особи</td>
+                                <td>70-125 кг</td>
+                            </tr>
+                            <tr>
+                                <td>Длина тела</td>
+                                <td>1.2-1.8 метра</td>
+                            </tr>
+                            <tr>
+                                <td>Продолжительность жизни</td>
+                                <td>20 лет в дикой природе, до 30 в неволе</td>
+                            </tr>
+                            <tr>
+                                <td>Ареал обитания</td>
+                                <td>Горные районы Сычуани, Шэньси и Ганьсу в Китае</td>
+                            </tr>
+                            <tr>
+                                <td>Статус сохранения</td>
+                                <td>Уязвимый вид (Vulnerable)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="info-section">
+                    <h2>Особенности питания</h2>
+                    <p>Панды обладают уникальной анатомией, адаптированной для питания бамбуком:</p>
+                    <ul class="fact-list">
+                        <li>Специальный "шестой палец" — видоизмененная кость запястья, помогает удерживать бамбук</li>
+                        <li>Мощные челюсти и зубы для пережевывания жесткого бамбука</li>
+                        <li>Пищеварительная система хищника, плохо приспособленная к растительной пище</li>
+                        <li>Ежедневно съедают 12-15 кг бамбука (до 40% собственного веса!)</li>
+                    </ul>
+                </div>
+                
+                <!-- Слайдер фотографий -->
+                <div class="slider-container">
+                    <div class="slider" id="pandaSlider">
+                        <div class="slide active">
+                            <img src="https://cdn.britannica.com/78/150978-050-48FB0F59/Giant-panda-bamboo.jpg" alt="Панда в бамбуковом лесу">
+                            <div class="slide-caption">Панда в естественной среде обитания</div>
+                        </div>
+                        <div class="slide">
+                            <img src="https://images.unsplash.com/photo-1564349683136-77e08dba1ef7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80" alt="Панда ест бамбук">
+                            <div class="slide-caption">Панда наслаждается свежим бамбуком</div>
+                        </div>
+                        <div class="slide">
+                            <img src="https://ak.picdn.net/shutterstock/videos/3677847323/thumb/8.jpg" alt="Детеныши панды">
+                            <div class="slide-caption">Детеныши панды играют вместе</div>
+                        </div>
+                    </div>
+                    <div class="slider-controls">
+                        <button class="slider-btn" onclick="prevSlide()"><i class="fas fa-chevron-left"></i> Назад</button>
+                        <button class="slider-btn" onclick="nextSlide()">Вперед <i class="fas fa-chevron-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Фотогалерея -->
+        <section id="gallery" class="page">
+            <div class="container">
+                <h1 style="color: var(--primary-dark); margin-bottom: 2rem;">Фотогалерея панд</h1>
+                <p style="text-align: center; margin-bottom: 2rem;">Полюбуйтесь красотой этих удивительных животных</p>
+                
+                <div class="gallery">
+                    <div class="photo-card">
+                        <img src="https://img.freepik.com/premium-photo/image-panda-is-sleeping-rocks-wild-animals_132416-207.jpg?semt=ais_hybrid&w=740" 
+                             alt="Панда спит" class="photo-img">
+                        <div class="photo-content">
+                            <h3>Отдыхающая панда</h3>
+                            <p>Панды могут спать в самых неожиданных позах</p>
+                        </div>
+                    </div>
+                    
+                    <div class="photo-card">
+                        <img src="https://travelask.ru/system/images/files/001/030/623/wysiwyg/i-3-1-1024x1024.jpg?1517570348" 
+                             alt="Панда кувыркается" class="photo-img">
+                        <div class="photo-content">
+                            <h3>Игривая панда</h3>
+                            <p>Молодые панды любят играть и кувыркаться</p>
+                        </div>
+                    </div>
+                    
+                    <div class="photo-card">
+                        <img src="https://img.freepik.com/premium-photo/panda-rolling-snow-wallpaper_1243427-1302.jpg?semt=ais_hybrid&w=740&q=80" 
+                             alt="Панда в снегу" class="photo-img">
+                        <div class="photo-content">
+                            <h3>Панда зимой</h3>
+                            <p>Панды отлично переносят холодный горный климат</p>
+                        </div>
+                    </div>
+                    
+                    <div class="photo-card">
+                        <img src="https://static.life.ru/publications/2023/10/1/365200711812.3943.png" 
+                             alt="Мама панда с детенышем" class="photo-img">
+                        <div class="photo-content">
+                            <h3>Материнская забота</h3>
+                            <p>Мамы-панды очень внимательно заботятся о своих малышах</p>
+                        </div>
+                    </div>
+                    
+                    <div class="photo-card">
+                        <img src="https://i.pinimg.com/originals/3a/e1/7e/3ae17e6a4524767d5d52fcdb9d8b49f2.jpg" 
+                             alt="Панда у водоема" class="photo-img">
+                        <div class="photo-content">
+                            <h3>Панда у воды</h3>
+                            <p>Панды хорошо плавают и любят воду в жаркие дни</p>
+                        </div>
+                    </div>
+                    
+                    <div class="photo-card">
+                        <img src="https://img.freepik.com/premium-photo/giant-black-white-panda-is-eating-bamboo-large-animal-close-up_304356-320.jpg?semt=ais_hybrid&w=740" 
+                             alt="Крупный план панды" class="photo-img">
+                        <div class="photo-content">
+                            <h3>Портрет панды</h3>
+                            <p>У каждой панды уникальный рисунок вокруг глаз</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Сохранение вида -->
+        <section id="conservation" class="page">
+            <div class="container">
+                <h1 style="color: var(--primary-dark); margin-bottom: 2rem;">Сохранение больших панд</h1>
+                
+                <div class="info-section">
+                    <h2>Угрозы для панд</h2>
+                    <p>Несмотря на улучшение ситуации в последние годы, большие панды продолжают сталкиваться с серьезными угрозами:</p>
+                    
+                    <div class="threats">
+                        <div class="threat-card">
+                            <h4>Потеря habitatа</h4>
+                            <p>Вырубка бамбуковых лесов для сельского хозяйства и развития инфраструктуры</p>
+                        </div>
+                        
+                        <div class="threat-card">
+                            <h4>Фрагментация ареала</h4>
+                            <p>Разделение популяций дорогами и населенными пунктами</p>
+                        </div>
+                        
+                        <div class="threat-card">
+                            <h4>Низкая рождаемость</h4>
+                            <p>Самки панд способны к размножению лишь 2-3 дня в году</p>
+                        </div>
+                        
+                        <div class="threat-card">
+                            <h4>Изменение климата</h4>
+                            <p>Глобальное потепление угрожает бамбуковым лесам</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-section">
+                    <h2>Успехи в сохранении</h2>
+                    <p>Благодаря международным усилиям, популяция больших панд постепенно восстанавливается:</p>
+                    <ul class="fact-list">
+                        <li>В 2016 году статус панд был изменен с "вымирающих" на "уязвимые"</li>
+                        <li>Создано более 67 заповедников для панд в Китае</li>
+                        <li>Популяция в дикой природе увеличилась до 1864 особей (по данным 2014 года)</li>
+                        <li>Успешные программы разведения в неволе</li>
+                        <li>Международное сотрудничество по исследованию и сохранению вида</li>
+                    </ul>
+                </div>
+                
+                <div class="help-section">
+                    <h2>Как можно помочь?</h2>
+                    <p style="margin-bottom: 2rem;">Каждый из нас может внести вклад в сохранение больших панд:</p>
+                    
+                    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                        <a href="#" class="btn" style="background-color: var(--white); color: var(--primary);">
+                            <i class="fas fa-donate"></i> Поддержать фонды
+                        </a>
+                        <a href="#" class="btn" style="background-color: var(--white); color: var(--primary);">
+                            <i class="fas fa-share-alt"></i> Распространить информацию
+                        </a>
+                        <a href="#" class="btn" style="background-color: var(--white); color: var(--primary);">
+                            <i class="fas fa-leaf"></i> Сохранять природу
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Интересные факты -->
+        <section id="facts" class="page">
+            <div class="container">
+                <h1 style="color: var(--primary-dark); margin-bottom: 2rem;">Интересные факты о пандах</h1>
+                
+                <div class="info-section">
+                    <h2>Удивительные особенности</h2>
+                    
+                    <div class="gallery" style="grid-template-columns: 1fr;">
+                        <div class="photo-card" style="display: flex; flex-direction: row; align-items: center;">
+                            <div style="flex: 1; padding: 2rem;">
+                                <h3>🐾 Шестой палец</h3>
+                                <p>У панд есть "ложный большой палец" — видоизмененная кость запястья, которая помогает им удерживать бамбук. Это уникальная адаптация, не встречающаяся у других медведей.</p>
+                            </div>
+                            <img src="https://i.ytimg.com/vi/Xw4exGISpkw/maxres2.jpg?sqp=-oaymwEoCIAKENAF8quKqQMcGADwAQH4Ac4FgALQBYoCDAgAEAEYTyBlKDEwDw==&amp;rs=AOn4CLDseED0mZ7C6nj7jvg6dslWGC5XmQ" 
+                                 alt="Лапа панды" class="photo-img" style="flex: 1; height: 200px;">
+                        </div>
+                    </div>
+                    
+                    <ul class="fact-list" style="margin-top: 2rem;">
+                        <li>Новорожденная панда весит примерно как чашка чая (100-200 грамм)</li>
+                        <li>Черно-белый окрас панд служит камуфляжем в заснеженных и тенистых местах</li>
+                        <li>Панды могут есть до 14 часов в сутки</li>
+                        <li>Несмотря на милый вид, панды обладают сильными челюстями и могут быть опасны</li>
+                        <li>В Древнем Китае панд считали магическими существами, способными отгонять злых духов</li>
+                        <li>Панды-близнецы рождаются довольно часто, но в дикой природе выживает обычно только один детеныш</li>
+                        <li>Панды имеют отличную память и могут запоминать маршруты к лучшим бамбуковым зарослям</li>
+                        <li>В отличие от других медведей, панды не впадают в спячку</li>
+                        <li>Каждая панда имеет уникальный рисунок черных пятен вокруг глаз, как отпечатки пальцев у человека</li>
+                        <li>Панды могут издавать до 11 различных звуков для общения</li>
+                    </ul>
+                </div>
+                
+                <div class="info-section">
+                    <h2>Панды в культуре</h2>
+                    <p>Большие панды стали важным символом в мировой культуре:</p>
+                    <ul class="fact-list">
+                        <li>С 1961 года панда является символом Всемирного фонда дикой природы (WWF)</li>
+                        <li>Панды используются в "дипломатии панд" — Китай дарит или сдает в аренду панд другим странам как жест дружбы</li>
+                        <li>Панда По из мультфильма "Кунг-фу панда" стал одним из самых узнаваемых анимационных персонажей в мире</li>
+                        <li>В Китае панда считается национальным достоянием и ее изображение охраняется законом</li>
+                        <li>Панды часто становятся талисманами спортивных мероприятий и экологических акций</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="footer-content">
+            <h3 style="font-size: 2rem; margin-bottom: 1rem;">🐼 Мир панд</h3>
+            <p>Сайт сделан для проекта Костиковой Ксенией </p>
+            
+            <div class="social-links">
+                <a href="#" class="social-icon"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+            </div>
+            
+            <p style="margin-top: 2rem; color: #aaa;">© 2026 Мир панд. Все права защищены.</p>
+            <p style="color: #aaa; font-size: 0.9rem;">Фотографии предоставлены Unsplash</p>
+        </div>
+    </footer>
+
+    <script>
+        // Функция для переключения страниц
+        function showPage(pageId) {
+            // Скрыть все страницы
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Показать выбранную страницу
+            document.getElementById(pageId).classList.add('active');
+            
+            // Обновить активную ссылку в навигации
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('onclick') === `showPage('${pageId}')`) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Закрыть мобильное меню, если оно открыто
+            const navLinksElement = document.getElementById('navLinks');
+            navLinksElement.classList.remove('active');
+            
+            // Прокрутить к верху страницы
+            window.scrollTo(0, 0);
+            
+            return false; // Предотвратить переход по ссылке
+        }
+        
+        // Мобильное меню
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        
+        // Закрыть меню при клике на ссылку
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+        
+        // Слайдер фотографий
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        
+        function showSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            currentSlide = index;
+        }
+        
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % slides.length;
+            showSlide(currentSlide);
+        }
+        
+        function prevSlide() {
+            currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+            showSlide(currentSlide);
+        }
+        
+        // Автоматическая смена слайдов
+        setInterval(nextSlide, 5000);
+        
+        // Инициализация - показать главную страницу при загрузке
+        document.addEventListener('DOMContentLoaded', () => {
+            showPage('home');
+            showSlide(0);
+        });
+    </script>
+</body>
+</html>
